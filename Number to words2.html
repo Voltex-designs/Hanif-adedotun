@@ -1,7 +1,6 @@
 <html>
 <head>
     <title> Numbers to words</title>
-     <script type="text/javascript" src="C:\Users\USER\Desktop\Coding\Voltex\Javascript\jquery-3.3.1.js"></script>
 </head>
   <style>
    span{
@@ -39,6 +38,9 @@
    .error{
      color: red;
    }
+    .good{
+      color: green;
+    }
 
    input{
      border-radius: 5px;
@@ -47,43 +49,6 @@
     </style>
 <script>
     
-$(document).ready(function(){
-    $('input').focus();
-    $("#refresh").click(function(){
-      location.reload(true);
-    });
-   //To animate my voltex logo
-   $('#footImg').hover(function(){
-      $(this).css('width', '+=20px' );
-      $(this).css('height', '+=10px'); 
-  },function(){
-     $(this).css('width', '-=20px');
-     $(this).css('height', '-=10px'); 
-   });
-
-  
-          });
-  /*  $("input").keyup(function(){
-
-     
-        //Im having trouble with this true and fasle statement
-      
-      var isNumber = function(number){ 
-        
-        return /^^[0-9]*$/.test(number);
-        
-         if (isNumber("input") = false ){
-        console.log(isNumber("input"));
-       $('#error2').text('Please enter a number').css('color', 'red');
-      } else if (isNumber("input") = true)
-      {$('#error2').css('display', 'none')}; 
-     
-     indexOf('undefined') != -1
-      } */
-
-  
-
-
 //This function here was written by https://stackoverflow.com/users/1220550/peter-b 
 /*This funcion is the engine of this code that takes in the value and coverts it.*/
 function NumInWords (number) {
@@ -96,9 +61,9 @@ function NumInWords (number) {
     let tempNumber = number%(100*Math.pow(1000,i));
     if (Math.floor(tempNumber/Math.pow(1000,i)) !== 0) {
       if (Math.floor(tempNumber/Math.pow(1000,i)) < 20) {
-        word = first[Math.floor(tempNumber/Math.pow(1000,i))] + mad[i] + ' ' + word;
+        word = first[Math.floor(tempNumber/Math.pow(1000,i))] + mad[i] + ' ' + word ;
       } else {
-        word = tens[Math.floor(tempNumber/(10*Math.pow(1000,i)))] + '-' + first[Math.floor(tempNumber/Math.pow(1000,i))%10] + mad[i] + ' ' + word;
+        word = tens[Math.floor(tempNumber/(10*Math.pow(1000,i)))] + '-' + first[Math.floor(tempNumber/Math.pow(1000,i))%10] + mad[i] + ' ' + word ;
       }
     }
 
@@ -106,47 +71,111 @@ function NumInWords (number) {
     if (Math.floor(tempNumber/(100*Math.pow(1000,i))) !== 0) word = first[Math.floor(tempNumber/(100*Math.pow(1000,i)))] + 'hunderd and ' + word;
   }
     return word;
+    return first;
 }
 
-//to call the function above to convert the numbers to words
+
 //and it validates the input at the same time
-function ConvertNumbers(){
-    var GetNumber = document.getElementById('number').value;
+
+function Vinput(){
+  var GetNumber = document.getElementById('number').value;
     var GetTypeNumber = isNaN(GetNumber);
    
     if(GetTypeNumber == true){
-       document.getElementById('words').innerHTML = 'Please Enter a valid number';
-       document.getElementById('words').classList.add("error");
+      document.getElementById('error2').classList.remove("good");
+      document.getElementById('error2').innerHTML = 'Please Enter a valid number';
+       document.getElementById('error2').classList.add("error");
        console.log("found");
+     
       }  else if (GetNumber.indexOf('-') != -1){
-        document.getElementById('words').innerHTML = 'Please a positive number';
-       document.getElementById('words').classList.add("error");
+        document.getElementById('error2').classList.remove("good");
+        document.getElementById('error2').innerHTML = 'Please a positive number';
+       document.getElementById('error2').classList.add("error");
+     
       } else if(GetTypeNumber == false){
-   document.getElementById('words').innerHTML = NumInWords(GetNumber);
-   document.getElementById('words').classList.remove("error");
-      }
+        document.getElementById('error2').innerHTML = 'Good';
+         document.getElementById('error2').classList.add("good");
+         if (GetNumber.indexOf('.') != -1) {
+            var characters = GetNumber.slice(GetNumber.indexOf('.'), GetNumber.indexOf('.')+4);
+            if (typeof characters[3] == 'string'){
+                console.log(typeof characters[3] == 'number');
+                 document.getElementById('error2').classList.remove("good");
+                  document.getElementById('error2').innerHTML = 'Please limit the decimal to 2 numbers';
+                  document.getElementById('error2').classList.add("error");
+                }
+           }
+          }
+          
+         
+}
 
+  
+//to call the function above to convert the numbers to words
+function ConvertNumbers(){
+  var GetNumber = document.getElementById('number').value;
+    var GetTypeNumber = isNaN(GetNumber);
+   
+    if(GetTypeNumber == true){
+       
+      document.getElementById('error2').innerHTML = 'Please Enter a valid number';
+       document.getElementById('error2').classList.add("error");
+       console.log("found");
+     
+      }  else if (GetNumber.indexOf('-') != -1){
+        document.getElementById('error2').innerHTML = 'Please a positive number';
+       document.getElementById('error2').classList.add("error");
+     
+      } else if(GetTypeNumber == false){
+        
+          if ( GetNumber.indexOf('.') != -1) {
+            var characters = GetNumber.slice(GetNumber.indexOf('.'), GetNumber.indexOf('.')+4);
+            var nChar = characters[1] + characters[2];
+            var CfN = NumInWords(nChar);
+            var fcharacters1 = '<b>Naira</b>' + ', ' + CfN + '<b>kobo</b>' ;
+            
+         var fNN = NumInWords(GetNumber).concat(fcharacters1);
+         var fN = document.getElementById('words').innerHTML = fNN ;
+         document.getElementById('error2').classList.remove("error");
+         document.getElementById('error2').innerHTML = '';
+                if (typeof characters[3] == 'number'){
+                  document.getElementById('error2').innerHTML = 'Please limit the decimal to 2 numbers';
+                  document.getElementById('error2').classList.add("error");
+                }
+           } else {
+        
+         var fNN = NumInWords(GetNumber).concat('<b>Naira</b>');
+         var fN = document.getElementById('words').innerHTML = fNN ;
+         document.getElementById('error2').classList.remove("error");
+         document.getElementById('error2').innerHTML = '';
+           }
+           
+          
+         
+      }
+      
+}
+
+function reloadPage(){
+  location.reload(true);
 }
  
-/*function invalidNumber(){
-      var wordConverted = document.getElementById('words');
-      var wordConvertedString = string(wordConverted);
-     // typeof wordConvertedString == "string" && 
-      
-    } */
+function focusObj(){
+  document.getElementById("number").focus();
+}
+
 
 //Created by Hanif Adedotun 2020
 </script>
-<body>
+<body onload= 'focusObj()'>
     <div>
 <h1 id="inputImport">Input a number to convert it to words</h1>
-<input onkeyup="ConvertNumbers()" id="number" type="text" placeholder="Enter any number "/>
+<input onkeyup = 'Vinput()' id="number" type="text" placeholder="Enter any number "/>
 
 <p><span id="error2"></span></p>
   
 <p>
       <button id="convertNumber" onclick="ConvertNumbers()">Convert</button>
-      <span><button id="refresh"><img id="refreshImage" src="refresh-logo.png" height="15px" width="15px"/></button></span>
+      <span><button id="refresh"><img id="refreshImage" onclick ='reloadPage()' src="refresh-logo.png" height="15px" width="15px"/></button></span>
   </p>
 <p> Your numbers in words is:</p><span id="words"></span>
 </div>
